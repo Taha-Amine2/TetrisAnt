@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="Compilation de Tetris" default="dist" basedir="." xmlns:ivy="antlib:org.apache.ivy.ant">
+
+  <property name="src.dir" location="src"/>
+  <property name="libs.dir" location="lib"/>
+  <property name="obj.dir" location="bin"/>
+  <property name="main-class" value="fr.ubo.tetris.Tetris"/>
+	<property name="test.results.dir" value="bin/test-results"/>
+	<property name="test.dir" value="test"/>
+	<property name="test.reports" location="test-reports" />
+	    <property name="doc.dir" location="javadoc" />
+  <property name="version" value="1.0"/>
+
+	<property name="compile.classpath" value="${libs.dir}/commons-lang3-3.5.jar;lib/hamcrest-core-1.3.jar;lib/hamcrest-all-1.3.jar;lib/junit-4.13.2.jar" />
+	
+	 <target name="retrieve">
+	 	<ivy:retrieve sync="true" type="jar"/>
+	 	<ivy:settings/>
+	 	<ivy:resolve/>
+	 	 </target>	
+	
+	 <target name="init">
+	    <tstamp/>
+	    <mkdir dir="${obj.dir}"/>
+	  </target>
+  <target name="compile" depends="init,retrieve"
+        description="compile les fichiers source">
+    <javac srcdir="${src.dir}" destdir="${obj.dir}" classpath="${compile.classpath}" source="17" target="17" includeantruntime="false"/>
+  </target>
+
+  <target name="dist" depends="compile">
+   
+    <jar jarfile="${obj.dir}/Tetris.jar" basedir="${obj.dir}"><manifest>
+        <attribute name="Main-Class" value="${main-class}"/>
+        <attribute name="Built-By" value="AMINE Taha"/>
+        <attribute name="Implementation-Version" value="${version}"/>
+    	<attribute name="Class-Path" value="${compile.classpath}"/>
+    </manifest>
+    	
+    </jar>
+  </target>
+	
+	<target name="compile-test"> 
+		<mkdir dir="${obj.dir}"/>
+		<javac srcdir="${test.dir}" destdir="${obj.dir}" classpath="${compile.classpath}">
+    </javac>
+</target>
+	
+	<target name="test" depends="compile-test">
+	    <mkdir dir="${test.results.dir}" />
+	    <junit printsummary="on" haltonfailure="yes">
+	        <classpath>
+	            <pathelement location="${obj.dir}" />
+	            <fileset dir="${libs.dir}">
+	                <include name="**/*.jar"/>
+	            </fileset>
+	        </classpath>
+	        <formatter type="plain" />
+	        <formatter type="xml" />
+	        <batchtest todir="${test.results.dir}">
+	            <fileset dir="${test.dir}">
+	                <include name="**/Test*.java" />
+	            </fileset>
+	        </batchtest>
+	    </junit>
+	</target>
+
+
+	
+	
+	 <target name="test-reports" depends="test">
+	        <mkdir dir="${test.reports}" />
+	        <junitreport todir="${test.reports}">
+	            <fileset dir="${test.results.dir}">
+	                <include name="*/.xml" />
+	            </fileset>
+	            <report format="frames" todir="${test.reports}" />
+	        </junitreport>
+	    </target>
+	    
+	    <target name="javadoc">
+	        <mkdir dir="${doc.dir}" />
+	        <javadoc sourcepath="${src.dir}" destdir="${doc.dir}">
+	        	<classpath>
+	        	            <fileset dir="${libs.dir}">
+	        	                <include name="**/*.jar"/>
+	        	            </fileset>
+	        	        </classpath>	
+	        </javadoc>
+	    </target>
+
+	    
+	<target name="all" depends="test,test-reports,javadoc">
+	        <echo message="La création du jar exécutable, la création des rapports des tests unitaire et la génération de la documentation ont été faites avec succès"/>
+	    </target>
+	
+  <target name="clean"
+        description="clean up">
+    <echo message= "Suppression des fichiers issus de la compilation"/>
+    <delete dir="${obj.dir}"/>
+  	<delete dir="lib"/>
+    <mkdir dir="lib"/>
+  </target>
+</project>
