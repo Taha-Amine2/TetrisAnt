@@ -1,4 +1,4 @@
-FROM alpine:latest
+FROM ubuntu:latest
 
 WORKDIR /app
 
@@ -23,4 +23,4 @@ RUN mkdir -p $IVY_HOME && \
 ENV CLASSPATH=$CLASSPATH:$IVY_HOME/ivy.jar
 
 
-RUN ant
+RUN ant all
