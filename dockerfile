@@ -21,4 +21,4 @@ RUN mkdir -p $IVY_HOME && \
     mv $IVY_HOME/ivy-${IVY_VERSION}.jar $IVY_HOME/ivy.jar
 
 
-CMD ["ant", "all"]
+RUN ant all
