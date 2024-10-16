@@ -16,5 +16,5 @@ RUN mkdir -p $IVY_HOME && \
     curl -L https://dlcdn.apache.org/ant/ivy/${IVY_VERSION}/apache-ivy-${IVY_VERSION}-bin.tar.gz | tar xz -C $IVY_HOME --strip-components=1 && \
     mv $IVY_HOME/ivy-${IVY_VERSION}.jar $IVY_HOME/ivy.jar
 
+CMD ["sh", "-c", "ant && ls -la bin"]
 
-CMD ["ant"]
