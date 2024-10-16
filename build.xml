@@ -31,7 +31,7 @@
 
   <target name="dist" depends="compile">
    
-    <jar jarfile="${obj.dir}/Tetris.jar" basedir="${obj.dir}"><manifest>
+    <jar jarfile="Tetris.jar" basedir="${obj.dir}"><manifest>
         <attribute name="Main-Class" value="${main-class}"/>
         <attribute name="Built-By" value="AMINE Taha"/>
         <attribute name="Implementation-Version" value="${version}"/>
