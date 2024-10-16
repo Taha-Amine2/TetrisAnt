@@ -4,8 +4,18 @@ WORKDIR /app
 
 COPY . .
 
-RUN apt-get update && apt-get install -y curl ant openjdk-11-jdk && \
-    mkdir -p /usr/local/lib/ant/lib && \
-    curl -L https://repo1.maven.org/maven2/org/apache/ivy/ivy/2.5.2/ivy-2.5.2.jar -o /usr/local/lib/ant/lib/ivy.jar
+ENV IVY_VERSION=2.5.2
+ENV IVY_HOME=/usr/local/ivy
+ENV IVY_JAR_PATH=$IVY_HOME/ivy-${IVY_VERSION}.jar
+
+RUN apt-get update && \
+    apt-get install -y ant curl && \
+    apt-get clean
+
+RUN mkdir -p $IVY_HOME && \
+    curl -L https://dlcdn.apache.org/ant/ivy/${IVY_VERSION}/apache-ivy-${IVY_VERSION}-bin.tar.gz | tar xz -C $IVY_HOME --strip-components=1 && \
+    mv $IVY_HOME/ivy-${IVY_VERSION}.jar $IVY_HOME/ivy.jar
+
+ENV CLASSPATH=$CLASSPATH:$IVY_HOME/ivy.jar
 
 CMD ["ant"]
