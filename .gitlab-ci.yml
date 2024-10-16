@@ -1,0 +1,23 @@
+image: docker:latest
+
+services:
+  - docker:dind
+
+variables:
+  DOCKER_DRIVER: overlay2
+  IMAGE_TAG: test
+
+stages:
+  - build
+
+build_image:
+  stage: build
+  script:
+    - echo "Building Docker image..."
+    - docker build -t ${IMAGE_TAG} .
+    - echo "Docker image built successfully!"
+  only:
+    - main  
+  
+  tags:
+    - dosi
