@@ -22,4 +22,3 @@ RUN ant  # Exécutez le build avec Ant
 
 CMD ["ant"]
 
-RUN ls -la bin
