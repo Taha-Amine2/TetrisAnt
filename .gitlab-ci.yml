@@ -12,6 +12,7 @@ build:
         docker rm conteneur
       fi
     - docker run -d --name conteneur tetrisant
+    - docker exec conteneur ls -l /app/bin  # Vérifiez le contenu de /app/bin
     - docker cp conteneur:/app/bin/Tetris.jar bin/Tetris.jar
     - docker stop conteneur  # Arrêtez le conteneur après avoir copié le fichier
     - docker rm conteneur  # Supprimez le conteneur après utilisation
