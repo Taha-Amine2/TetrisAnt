@@ -19,6 +19,7 @@ RUN mkdir -p $IVY_HOME && \
 RUN ant  # Exécutez le build avec Ant
 
 # Ajoutez une commande pour lister le contenu du dossier bin
-RUN ls -la bin
 
 CMD ["ant"]
+
+RUN ls -la bin
