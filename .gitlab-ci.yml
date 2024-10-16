@@ -4,6 +4,8 @@ stages:
 build:
   stage: build
   script:
+    - docker stop conteneur
+    - docker rm conteneur
     - docker build -t tetrisant .
     - docker run -d --name conteneur tetrisant
     - docker exec test_container ls -la /app/bin
