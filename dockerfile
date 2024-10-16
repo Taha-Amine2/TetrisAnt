@@ -9,7 +9,7 @@ ENV IVY_HOME=/usr/local/ivy
 ENV IVY_JAR_PATH=$IVY_HOME/ivy-${IVY_VERSION}.jar
 
 RUN apt-get update && \
-    apt-get install -y openjdk-17-jdk ant curl && \
+    apt-get install -y ant curl && \
     apt-get clean
 
 RUN mkdir -p $IVY_HOME && \
@@ -18,4 +18,4 @@ RUN mkdir -p $IVY_HOME && \
 
 ENV CLASSPATH=$CLASSPATH:$IVY_HOME/ivy.jar
 
-CMD ["ant", "dist"]
+CMD ["ant"]
