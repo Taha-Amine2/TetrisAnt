@@ -8,8 +8,6 @@ variables:
 build:
   stage: build
   image: docker:latest
-  services:
-     - docker:kaniko
   script:
     - docker build -t TetrisAnt:latest .
   artifacts:
