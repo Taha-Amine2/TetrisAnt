@@ -7,7 +7,7 @@ build:
     - docker build -t tetrisant:latest .
   artifacts:
     paths:
-      - bin/Tetris.jar
+      - bin
   tags:
     - dosi
 
