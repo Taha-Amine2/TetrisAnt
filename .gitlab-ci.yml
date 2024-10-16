@@ -6,7 +6,7 @@ build:
   script:
     - docker build -t tetrisant:latest .
     - docker run -d --name conteneur testrisant
-    - docker cp conteneur:/app/dist/Tetris.jar bin/Tetris.jar
+    - docker cp conteneur:/app/bin/Tetris.jar bin/Tetris.jar
 
   artifacts:
     paths:
