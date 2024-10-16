@@ -4,7 +4,7 @@ stages:
 build:
   stage: build
   script:
-    - docker build -t tetrisant:latest .
+    - docker build -t tetrisant .
     - docker run -d --name cont testristant
     - docker cp cont:/app/dist/Tetris.jar Tetris.jar
     - docker stop cont
