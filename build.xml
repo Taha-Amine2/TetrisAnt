@@ -21,6 +21,7 @@
 	
 	 <target name="init">
 	    <tstamp/>
+		<mkdir dir="${doc.dir}" />
 	    <mkdir dir="${obj.dir}"/>
 	  </target>
   <target name="compile" depends="init,retrieve"
@@ -81,8 +82,8 @@
 	        <javadoc sourcepath="${src.dir}" destdir="${doc.dir}">
 	        	<classpath>
 	        	            <fileset dir="${libs.dir}">
-    <include name="**/*.jar"/>
-</fileset>
+					<include name="**/*.jar"/>
+				</fileset>
 
 	        	        </classpath>	
 	        </javadoc>
