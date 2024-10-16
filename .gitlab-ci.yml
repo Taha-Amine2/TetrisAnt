@@ -1,24 +1,32 @@
-image: docker:latest
-
-services:
-  - docker:dind
-
-variables:
-  DOCKER_DRIVER: overlay2
-  IMAGE_TAG: test
-
 stages:
   - build
+  - notify
 
-build_image:
+variables:
+    DOCKER_HOST: tcp://docker:2375/
+    DOCKER_DRIVER: overlay2 
+
+build:
   stage: build
+  image: docker:latest
+  services:
+     - docker:dind
+  script:
+    - docker build -t tetris-project:latest .
+  artifacts:
+    paths:
+      - bin/Tetris.jar
+  tags:
+    - dosi
+
+notify:
+  stage: notify
   tags:
     - dosi
   script:
-    - echo "Building Docker image..."
-    - docker build -t ${IMAGE_TAG} .
-    - echo "Docker image built successfully!"
-  only:
-    - main  
-  
-
+    - |
+      curl -X POST -H "Content-Type: application/json" \
+      -d '{
+            "text": "Compilé avec succès"
+          }' \
+        $NOTIFY_URL https://chat.googleapis.com/v1/spaces/AAAAbRqmWPk/messages?key=AIzaSyDdI0hCZtE6vySjMm-WEfRq3CPzqKqqsHI&token=oxHNTaC3Byywe-BcH2GYuwsuM_hFnUFdwKVgWqfHoGM
