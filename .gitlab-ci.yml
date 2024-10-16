@@ -7,9 +7,9 @@ variables:
 
 build:
   stage: build
-  image: docker:latest
+  image: docker:kaniko
   services:
-     - docker:dind
+     - docker:dood
   script:
     - docker build -t TetrisAnt:latest .
   artifacts:
