@@ -1,4 +1,4 @@
-FROM ubuntu:latest
+FROM openjdk:17  
 
 WORKDIR /app
 
@@ -18,4 +18,4 @@ RUN mkdir -p $IVY_HOME && \
 
 ENV CLASSPATH=$CLASSPATH:$IVY_HOME/ivy.jar
 
-RUN ant all
+CMD ["ant", "all"]
