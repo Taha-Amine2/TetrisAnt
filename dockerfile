@@ -18,6 +18,4 @@ RUN mkdir -p $IVY_HOME && \
 
 ENV CLASSPATH=$CLASSPATH:$IVY_HOME/ivy.jar
 
-CMD ["ant"]
-
 RUN ant all

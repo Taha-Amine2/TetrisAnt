@@ -90,7 +90,7 @@
 	    </target>
 
 	    
-	<target name="all" depends="test,test-reports,javadoc">
+	<target name="all" depends="clean,dist,test,test-reports,javadoc">
 	        <echo message="La création du jar exécutable, la création des rapports des tests unitaire et la génération de la documentation ont été faites avec succès"/>
 	    </target>
 	
