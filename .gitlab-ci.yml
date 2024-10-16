@@ -5,7 +5,7 @@ stages:
 build:
   stage: build
   script:
-    - docker build -t TetrisAnt:latest .
+    - docker build -t tetrisant:latest .
   artifacts:
     paths:
       - bin/Tetris.jar
