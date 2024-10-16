@@ -1,17 +1,11 @@
 stages:
   - build
-  - notify
-
-variables:
-    DOCKER_DRIVER: overlay2 
     
 
 build:
   stage: build
-  image: docker:latest
   script:
-    - unset DOCKER_HOST
-    - docker build -t TetrisAnt:latest .
+    - docker build -t tetrisant:latest .
   artifacts:
     paths:
       - bin/Tetris.jar
