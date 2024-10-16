@@ -4,11 +4,13 @@ stages:
 
 variables:
     DOCKER_DRIVER: overlay2 
+    
 
 build:
   stage: build
   image: docker:latest
   script:
+    - unset DOCKER_HOST
     - docker build -t TetrisAnt:latest .
   artifacts:
     paths:
