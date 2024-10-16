@@ -12,6 +12,8 @@ stages:
 
 build_image:
   stage: build
+  tags:
+    - dosi
   script:
     - echo "Building Docker image..."
     - docker build -t ${IMAGE_TAG} .
@@ -19,5 +21,4 @@ build_image:
   only:
     - main  
   
-  tags:
-    - dosi
+
