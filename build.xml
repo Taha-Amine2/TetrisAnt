@@ -10,7 +10,8 @@
 	<property name="test.reports" location="test-reports" />
 	    <property name="doc.dir" location="javadoc" />
   <property name="version" value="1.0"/>
-  <property name="compile.classpath" value="${libs.dir}/commons-lang3-3.5.jar"/>
+  <property name="compile.classpath" value="${libs.dir}/commons-lang3-3.5.jar;lib/hamcrest-core-1.3.jar;lib/hamcrest-all-1.3.jar;lib/junit-4.13.2.jar" />
+
 	
 	 <target name="retrieve">
 	 	<ivy:retrieve sync="true" type="jar"/>
@@ -24,7 +25,7 @@
 	  </target>
   <target name="compile" depends="init,retrieve"
         description="compile les fichiers source">
-    <javac srcdir="${src.dir}" destdir="${obj.dir}" classpath="${compile.classpath}" source="17" target="17" includeantruntime="false"/>
+    <javac srcdir="${src.dir}" destdir="${obj.dir}" classpath="${libs.dir}/commons-lang3-3.5.jar" source="17" target="17" includeantruntime="false"/>
   </target>
 
   <target name="dist" depends="compile">
@@ -33,7 +34,7 @@
         <attribute name="Main-Class" value="${main-class}"/>
         <attribute name="Built-By" value="AMINE Taha"/>
         <attribute name="Implementation-Version" value="${version}"/>
-    	<attribute name="Class-Path" value="${compile.classpath}"/>
+    	<attribute name="Class-Path" value="${libs.dir}/commons-lang3-3.5.jar"/>
     </manifest>
     	
     </jar>
@@ -41,28 +42,29 @@
 	
 	<target name="compile-test"> 
 		<mkdir dir="${obj.dir}"/>
-		<javac srcdir="${src.dir}" destdir="${obj.dir}">
+		<javac srcdir="${test.dir}" destdir="${obj.dir}" classpath="${compile.classpath}">
     </javac>
 </target>
 	
 	<target name="test" depends="compile-test">
-	        <mkdir dir="${test.results.dir}" />
-	        <junit printsummary="on" haltonfailure="yes">
-	            <classpath>
-	                <pathelement location="${obj.dir}" />
-	            </classpath>
-	            <formatter type="plain" />
-	            <formatter type="xml" />
-	            <batchtest todir="${test.results.dir}">
-	            	<fileset dir="${libs.dir}">
-	            	                <include name="*/junit-.jar"/>
-	            	            </fileset>
-	                <fileset dir="${test.dir}">
-	                    <include name="**/*Test.java" />
-	                </fileset>
-	            </batchtest>
-	        </junit>
-	    </target>
+	    <mkdir dir="${test.results.dir}" />
+	    <junit printsummary="on" haltonfailure="yes">
+	        <classpath>
+	            <pathelement location="${obj.dir}" />
+	            <fileset dir="${libs.dir}">
+	                <include name="**/*.jar"/>
+	            </fileset>
+	        </classpath>
+	        <formatter type="plain" />
+	        <formatter type="xml" />
+	        <batchtest todir="${test.results.dir}">
+	            <fileset dir="${test.dir}">
+	                <include name="**/Test*.java" />
+	            </fileset>
+	        </batchtest>
+	    </junit>
+	</target>
+		
 	
 	 <target name="test-reports" depends="test">
 	        <mkdir dir="${test.reports}" />
@@ -79,8 +81,9 @@
 	        <javadoc sourcepath="${src.dir}" destdir="${doc.dir}">
 	        	<classpath>
 	        	            <fileset dir="${libs.dir}">
-	        	                <include name="*/.jar"/>
-	        	            </fileset>
+    <include name="**/*.jar"/>
+</fileset>
+
 	        	        </classpath>	
 	        </javadoc>
 	    </target>

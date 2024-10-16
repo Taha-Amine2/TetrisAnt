@@ -1,6 +1,5 @@
 stages:
   - build
-  - notif
 
 build:
   stage: build
@@ -11,13 +10,4 @@ build:
       - bin/Tetris.jar
   tags:
     - dosi
-notif:
-  stage: notif
-  script:
-    - |
-      curl -X POST -H 'Content-Type: application/json' \
-      --data '{"content": "Le build a été complété avec succès!"}' \
-      https://discord.com/api/webhooks/1296084691237212221/OKZBzPOR6Eu3pd5w3sg_I9cL1CtmweeOu3od8yGYJXonDYx0Y4gpQvAefqoi2mwDaY-r
-  when: on_success  
-  tags:
-    - dosi
+
