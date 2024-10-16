@@ -4,21 +4,13 @@ stages:
 build:
   stage: build
   script:
-    - mkdir -p bin  # Créez le dossier bin s'il n'existe pas
-    - docker build -t tetrisant .
-    - |
-      if [ $(docker ps -aq -f name=conteneur) ]; then
-        docker stop conteneur
-        docker rm conteneur
-      fi
-    - docker run -d --name conteneur tetrisant
-    - docker exec conteneur ls -l /app/bin  # Vérifiez le contenu de /app/bin
-    - docker cp conteneur:/app/bin/Tetris.jar bin/Tetris.jar
-    - docker stop conteneur  # Arrêtez le conteneur après avoir copié le fichier
-    - docker rm conteneur  # Supprimez le conteneur après utilisation
-
+    - docker build -t tetrisant:latest .
+    - docker run -d --name cont testristant
+    - docker cp cont:/app/dist/Tetris.jar Tetris.jar
+    - docker stop cont
+    - docker rm cont
   artifacts:
     paths:
-      - bin/Tetris.jar
+      - Tetris.jar
   tags:
     - dosi
