@@ -4,6 +4,7 @@ stages:
 build:
   stage: build
   script:
+    - docker rm cont
     - docker build -t tetrisant .
     - docker run -d --name cont tetrisant
     - ls -la bin
