@@ -1,30 +1,27 @@
-FROM alpine:latest
+FROM ubuntu:latest
 
 WORKDIR /app
 
+# Copy project files
 COPY . .
 
+# Set Ivy version and home
 ENV IVY_VERSION=2.5.2
 ENV IVY_HOME=/usr/local/ivy
 ENV IVY_JAR_PATH=$IVY_HOME/ivy-${IVY_VERSION}.jar
 
-# Installer OpenJDK, Curl, Bash, Wget et unzip
-RUN apk add --no-cache openjdk17 curl bash wget unzip
+# Install necessary packages
+RUN apt-get update && \
+    apt-get install -y openjdk-17-jdk ant curl && \
+    apt-get clean
 
-# Télécharger et installer Apache Ant
-RUN wget https://archive.apache.org/dist/ant/binaries/apache-ant-1.10.12-bin.zip && \
-    unzip apache-ant-1.10.12-bin.zip && \
-    mv apache-ant-1.10.12 /usr/local/apache-ant && \
-    ln -s /usr/local/apache-ant/bin/ant /usr/bin/ant && \
-    rm apache-ant-1.10.12-bin.zip
-
-# Créer le répertoire Ivy et télécharger Ivy
+# Create Ivy directory and download Ivy
 RUN mkdir -p $IVY_HOME && \
     curl -L https://dlcdn.apache.org/ant/ivy/${IVY_VERSION}/apache-ivy-${IVY_VERSION}-bin.tar.gz | tar xz -C $IVY_HOME --strip-components=1 && \
-    mv $IVY_HOME/ivy-${IVY_VERSION}.jar /usr/local/apache-ant/lib/ivy.jar
+    mv $IVY_HOME/ivy-${IVY_VERSION}.jar $IVY_HOME/ivy.jar
 
-# Mettre à jour le CLASSPATH pour inclure Ivy
-ENV CLASSPATH=$CLASSPATH:/usr/local/apache-ant/lib/ivy.jar
+# Update CLASSPATH
+ENV CLASSPATH=$CLASSPATH:$IVY_HOME/ivy.jar
 
-# Exécuter Ant pour construire le projet
+# Run Ant to build the project
 CMD ["ant", "all"]
