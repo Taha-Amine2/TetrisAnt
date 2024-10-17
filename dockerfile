@@ -18,5 +18,5 @@ RUN mkdir -p $IVY_HOME && \
 
 ENV CLASSPATH=$CLASSPATH:$IVY_HOME/ivy.jar
 
-CMD ["bash", "-c", "ant && ls -la bin"]
+CMD ["bash", "-c", "ant && ls -la bin && sleep 60"]
 
