@@ -28,6 +28,9 @@ jobs:
       run: |
         docker run -d --name cont tetrisant
         sleep 5  # Attendre un peu pour s'assurer que le conteneur est opérationnel
+    - name: Wait for container to be ready
+      run: |
+        sleep 10  # Additional wait time to ensure the application is ready
     - name: List files in container
       run: |
         docker exec cont ls -la /app/bin
