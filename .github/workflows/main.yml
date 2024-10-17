@@ -57,6 +57,8 @@ jobs:
     - name: Tag and push image to Docker Hub
       run: |
         docker images
+        docker build -t tetrisant .
+        docker images
         echo "Tagging and pushing image to Docker Hub..."
         docker tag tetrisant sciencefear/tetrisant:${{ github.ref_name }}
         docker push sciencefear/tetrisant:${{ github.ref_name }}
