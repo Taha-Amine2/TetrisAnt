@@ -8,6 +8,7 @@ pipeline {
     environment {
         DOCKER_IMAGE = 'tetrisant:latest'
         JAR_FILE = 'Tetris.jar'
+        SONARQUBE_TOKEN = credentials('tetristoken')
     }
 
     stages {
@@ -39,14 +40,29 @@ pipeline {
         stage('Run Docker Image and extract Tetris.jar') {
             steps {
                 script {
-                    sh 'docker stop temp-container'
-                    sh 'docker rm temp-container'
-                    // Run the Docker container
+                    sh 'docker stop temp-container || true'
+                    sh 'docker rm temp-container || true'
                     sh 'docker run --name temp-container ${DOCKER_IMAGE}'
-                    // Copy Tetris.jar from the container
                     sh 'docker cp temp-container:/app/bin/${JAR_FILE} Tetris.jar'
-                    // Remove the temporary container
                     sh 'docker rm temp-container'
+                }
+            }
+        }
+
+        stage('SonarQube Analysis') {
+            steps {
+                script {
+                    def scannerHome = tool 'tetris' 
+                    withSonarQubeEnv('tetris') { 
+                        sh """
+                        ${scannerHome}/bin/sonar-scanner \
+                        -Dsonar.projectKey=tetristoken \
+                        -Dsonar.projectName=tetris \
+                        -Dsonar.sources=. \
+                        -Dsonar.host.url=http://localhost:9000 \
+                        -Dsonar.login=${SONARQUBE_TOKEN}
+                        """
+                    }
                 }
             }
         }
