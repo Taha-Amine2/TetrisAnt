@@ -22,3 +22,5 @@ build:
   artifacts:
     paths:
       - Tetris.jar
+  tags:
+    - dosi
