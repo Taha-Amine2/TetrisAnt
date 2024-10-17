@@ -21,7 +21,7 @@ build:
 deploy:
   stage: deploy
   script:
-    - echo "Logging into Docker Hub...."
+    - echo "Logging into Docker Hub......"
     - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
     - echo "Tagging and pushing image to Docker Hub..."
     - docker tag tetrisant sciencefear/tetrisant:$CI_COMMIT_TAG
