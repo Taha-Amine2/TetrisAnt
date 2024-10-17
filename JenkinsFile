@@ -44,6 +44,7 @@ pipeline {
                     sh 'docker rm temp-container || true'
                     sh 'docker run --name temp-container ${DOCKER_IMAGE}'
                     sh 'docker cp temp-container:/app/bin/${JAR_FILE} Tetris.jar'
+                    sh 'docker cp temp-container:/app/bin/fr/ubo/tetris ./compiled_classes' // Copy compiled classes
                     sh 'docker stop temp-container || true'
                     sh 'docker rm temp-container'
                 }
@@ -60,7 +61,7 @@ pipeline {
                 -Dsonar.projectKey=tetris \
                 -Dsonar.projectName=tetris \
                 -Dsonar.sources=. \
-                -Dsonar.java.binaries=bin/fr/ubo/tetris \
+                -Dsonar.java.binaries=compiled_classes \
                 -Dsonar.host.url=http://localhost:9000 \
                 -Dsonar.login=${SONARQUBE_TOKEN}
                 """
