@@ -44,7 +44,7 @@ pipeline {
                     // Run the Docker container
                     sh 'docker run --name temp-container ${DOCKER_IMAGE}'
                     // Copy Tetris.jar from the container
-                    sh 'docker cp temp-container:/app/dist/${JAR_FILE} .'
+                    sh 'docker cp temp-container:/app/bin/${JAR_FILE} Tetris.jar'
                     // Remove the temporary container
                     sh 'docker rm temp-container'
                 }
