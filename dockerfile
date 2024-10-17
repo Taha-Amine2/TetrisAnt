@@ -1,4 +1,4 @@
-FROM openjdk:11-jdk-alpine
+FROM openjdk:11-jdk-slim
 
 WORKDIR /app
 
@@ -9,11 +9,15 @@ ENV IVY_HOME=/usr/local/ivy
 ENV IVY_JAR_PATH=$IVY_HOME/ivy-${IVY_VERSION}.jar
 
 # Install dependencies
-RUN apk add --no-cache bash curl
+RUN apt-get update && \
+    apt-get install -y curl unzip && \
+    apt-get clean
 
 # Install Apache Ant
-RUN curl -L https://downloads.apache.org/ant/binaries/apache-ant-1.10.12-bin.tar.gz | tar xz -C /usr/local/ && \
-    mv /usr/local/apache-ant-1.10.12 /usr/local/ant
+RUN curl -L https://downloads.apache.org/ant/binaries/apache-ant-1.10.12-bin.zip -o ant.zip && \
+    unzip ant.zip -d /usr/local/ && \
+    mv /usr/local/apache-ant-1.10.12 /usr/local/ant && \
+    rm ant.zip
 
 ENV PATH=$PATH:/usr/local/ant/bin
 ENV CLASSPATH=$CLASSPATH:$IVY_HOME/ivy.jar
