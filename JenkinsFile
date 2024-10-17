@@ -6,27 +6,45 @@ pipeline {
     }
 
     environment {
+        DOCKER_IMAGE = 'tetrisant:latest'
         JAR_FILE = 'Tetris.jar'
-        LAST_SUCCESSFUL_BUILD = 'build' // Replace this with the actual job name if needed
     }
 
     stages {
-        stage('Retrieve Artifact') {
+        stage('Checkout code') {
+            steps {
+                checkout([
+                    $class: 'GitSCM', 
+                    branches: [[name: '*/main']], 
+                    doGenerateSubmoduleConfigurations: false, 
+                    extensions: [], 
+                    submoduleCfg: [], 
+                    userRemoteConfigs: [[
+                        credentialsId: 'jenkinscreds', 
+                        url: 'https://github.com/Taha-Amine2/TetrisAnt.git'
+                    ]]
+                ])
+            }
+        }
+
+        stage('Build Docker image') {
             steps {
                 script {
-                    // Get the last successful build of the specified job
-                    def lastBuild = build(job: LAST_SUCCESSFUL_BUILD, propagate: false, wait: true)
+                    // Build the Docker image
+                    sh 'docker build -t ${DOCKER_IMAGE} .'
+                }
+            }
+        }
 
-                    // Check if the last build was successful
-                    if (lastBuild.result == 'SUCCESS') {
-                        // Copy the artifact from the last successful build
-                        // Make sure to replace 'your-jenkins-url' with the actual URL of your Jenkins instance
-                        sh """
-                        curl -o ${JAR_FILE} ${JENKINS_URL}/job/${LAST_SUCCESSFUL_BUILD}/lastSuccessfulBuild/artifact/${JAR_FILE}
-                        """
-                    } else {
-                        error("The last successful build was not successful!")
-                    }
+        stage('Run Docker Image and extract Tetris.jar') {
+            steps {
+                script {
+                    // Run the Docker container
+                    sh 'docker run --name temp-container ${DOCKER_IMAGE}'
+                    // Copy Tetris.jar from the container
+                    sh 'docker cp temp-container:/app/dist/${JAR_FILE} .'
+                    // Remove the temporary container
+                    sh 'docker rm temp-container'
                 }
             }
         }
@@ -39,4 +57,10 @@ pipeline {
         }
     }
 
+    post {
+        cleanup {
+            // Clean up Docker images and containers
+            sh 'docker rmi ${DOCKER_IMAGE} || true'
+        }
+    }
 }
