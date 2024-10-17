@@ -1,4 +1,4 @@
-FROM alpine:latest
+FROM alpine:3.18
 
 WORKDIR /app
 
@@ -9,7 +9,7 @@ ENV IVY_HOME=/usr/local/ivy
 ENV IVY_JAR_PATH=$IVY_HOME/ivy-${IVY_VERSION}.jar
 
 # Install dependencies
-RUN apk add --no-cache openjdk11 bash curl ant
+RUN apk add --no-cache openjdk11-jre bash curl ant
 
 # Install Ivy
 RUN mkdir -p $IVY_HOME && \
