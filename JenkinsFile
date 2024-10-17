@@ -52,7 +52,7 @@ pipeline {
         stage('SonarQube Analysis') {
             steps {
                 script {
-                    def scannerHome = tool 'tetris' 
+                    def scannerHome = tool 'SonarQubeScanner'
                     withSonarQubeEnv('tetris') { 
                         sh """
                         ${scannerHome}/bin/sonar-scanner \
