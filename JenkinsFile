@@ -58,7 +58,7 @@ pipeline {
             withSonarQubeEnv('tetris') { 
                 sh """
                 ${scannerHome}/bin/sonar-scanner \
-                -Dsonar.projectKey=tetris \
+                -Dsonar.projectKey=Tetris \
                 -Dsonar.projectName=tetris \
                 -Dsonar.sources=. \
                 -Dsonar.java.binaries=compiled_classes \
