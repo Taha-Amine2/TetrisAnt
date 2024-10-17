@@ -5,7 +5,6 @@ stages:
 build:
   stage: build
   script:
-    - docker system prune --force
     - docker rm cont || true
     - docker build --no-cache -t tetrisant .
     - docker run --name cont tetrisant
