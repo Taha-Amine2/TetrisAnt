@@ -6,7 +6,7 @@ pipeline {
     }
 
     environment {
-        DOCKER_IMAGE = 'tetris-app:latest'
+        DOCKER_IMAGE = 'tetrisant:latest'
         JAR_FILE = 'Tetris.jar'
     }
 
@@ -20,8 +20,8 @@ pipeline {
                     extensions: [], 
                     submoduleCfg: [], 
                     userRemoteConfigs: [[
-                        credentialsId: 'Tok_Jenkins', 
-                        url: 'https://github.com/anouar-bakouch/Tetris-Dockerize-.git'
+                        credentialsId: 'jenkinscreds', 
+                        url: 'https://github.com/Taha-Amine2/TetrisAnt.git'
                     ]]
                 ])
             }
