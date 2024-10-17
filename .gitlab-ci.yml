@@ -6,7 +6,7 @@ build:
   script:
     - docker rm cont || true
     - docker build -t tetrisant .
-    - docker run -d --name cont tetrisant
+    - docker run --name cont tetrisant
     - ls -la
     - docker cp cont:/app/bin/Tetris.jar Tetris.jar
     - docker stop cont
