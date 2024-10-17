@@ -51,22 +51,23 @@ pipeline {
         }
 
         stage('SonarQube Analysis') {
-            steps {
-                script {
-                    def scannerHome = tool 'tetrisscanner'
-                    withSonarQubeEnv('tetris') { 
-                        sh """
-                        ${scannerHome}/bin/sonar-scanner \
-                        -Dsonar.projectKey=tetristoken \
-                        -Dsonar.projectName=tetris \
-                        -Dsonar.sources=. \
-                        -Dsonar.host.url=http://localhost:9000 \
-                        -Dsonar.login=${SONARQUBE_TOKEN}
-                        """
-                    }
-                }
+    steps {
+        script {
+            def scannerHome = tool 'tetrisscanner' 
+            withSonarQubeEnv('tetris') { 
+                sh """
+                ${scannerHome}/bin/sonar-scanner \
+                -Dsonar.projectKey=tetris \
+                -Dsonar.projectName=tetris \
+                -Dsonar.sources=. \
+                -Dsonar.java.binaries=bin/fr/ubo/tetris \
+                -Dsonar.host.url=http://localhost:9000 \
+                -Dsonar.login=${SONARQUBE_TOKEN}
+                """
             }
         }
+    }
+}
 
         stage('Archive Tetris.jar') {
             steps {
