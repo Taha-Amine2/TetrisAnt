@@ -44,6 +44,7 @@ pipeline {
                     sh 'docker rm temp-container || true'
                     sh 'docker run --name temp-container ${DOCKER_IMAGE}'
                     sh 'docker cp temp-container:/app/bin/${JAR_FILE} Tetris.jar'
+                    sh 'docker stop temp-container || true'
                     sh 'docker rm temp-container'
                 }
             }
