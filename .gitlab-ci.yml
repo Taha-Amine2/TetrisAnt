@@ -1,18 +1,24 @@
 stages:
   - build
 
+variables:
+  IMAGE_NAME: tetrisant
+
 build:
   stage: build
+  image: docker:latest
   script:
+    - echo "Building Docker image..."
+    - docker build -t $IMAGE_NAME .
+    - echo "Running Docker container..."
+    - docker run -d --name cont $IMAGE_NAME
+    - echo "Waiting for the container to start..."
+    - sleep 5
+    - echo "Copying Tetris.jar from container..."
+    - docker cp cont:/app/bin/Tetris.jar ./Tetris.jar
+    - echo "Stopping and removing Docker container..."
+    - docker stop cont || true
     - docker rm cont || true
-    - docker build -t tetrisant .
-    - docker run -d --name cont tetrisant
-    - ls -la
-    - docker cp cont:/app/bin/Tetris.jar Tetris.jar
-    - docker stop cont
-    - docker rm cont
   artifacts:
     paths:
       - Tetris.jar
-  tags:
-    - dosi
