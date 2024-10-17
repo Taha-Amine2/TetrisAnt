@@ -1,0 +1,66 @@
+pipeline {
+    agent any
+
+    options {
+        skipStagesAfterUnstable()
+    }
+
+    environment {
+        DOCKER_IMAGE = 'tetris-app:latest'
+        JAR_FILE = 'Tetris.jar'
+    }
+
+    stages {
+        stage('Checkout code') {
+            steps {
+                checkout([
+                    $class: 'GitSCM', 
+                    branches: [[name: '*/main']], 
+                    doGenerateSubmoduleConfigurations: false, 
+                    extensions: [], 
+                    submoduleCfg: [], 
+                    userRemoteConfigs: [[
+                        credentialsId: 'Tok_Jenkins', 
+                        url: 'https://github.com/anouar-bakouch/Tetris-Dockerize-.git'
+                    ]]
+                ])
+            }
+        }
+
+        stage('Build Docker image') {
+            steps {
+                script {
+                    // Build the Docker image
+                    sh 'docker build -t ${DOCKER_IMAGE} .'
+                }
+            }
+        }
+
+        stage('Run Docker Image and extract Tetris.jar') {
+            steps {
+                script {
+                    // Run the Docker container
+                    sh 'docker run --name temp-container ${DOCKER_IMAGE}'
+                    // Copy Tetris.jar from the container
+                    sh 'docker cp temp-container:/app/dist/${JAR_FILE} .'
+                    // Remove the temporary container
+                    sh 'docker rm temp-container'
+                }
+            }
+        }
+
+        stage('Archive Tetris.jar') {
+            steps {
+                // Archive the JAR file as an artifact
+                archiveArtifacts artifacts: "${JAR_FILE}", allowEmptyArchive: false
+            }
+        }
+    }
+
+    post {
+        cleanup {
+            // Clean up Docker images and containers
+            sh 'docker rmi ${DOCKER_IMAGE} || true'
+        }
+    }
+}
