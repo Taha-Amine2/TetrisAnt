@@ -39,6 +39,8 @@ pipeline {
         stage('Run Docker Image and extract Tetris.jar') {
             steps {
                 script {
+                    sh 'docker stop temp-container'
+                    sh 'docker rm temp-container'
                     // Run the Docker container
                     sh 'docker run --name temp-container ${DOCKER_IMAGE}'
                     // Copy Tetris.jar from the container
