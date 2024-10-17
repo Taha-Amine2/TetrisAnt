@@ -1,0 +1,61 @@
+name: Build and Deploy Docker Image
+
+on:
+  push:
+    branches:
+      - main  # ou la branche de ton choix
+    tags:
+      - '*'  # Pour déclencher sur tous les tags, comme 1.0.0, 1.1.1, etc.
+  pull_request:
+    branches:
+      - main  # ou la branche de ton choix
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v1
+
+    - name: Build Docker image
+      run: |
+        docker build -t tetrisant .
+    - name: Run Docker container
+      run: |
+        docker run -d --name cont tetrisant
+        sleep 5  # Attendre un peu pour s'assurer que le conteneur est opérationnel
+    - name: List files in container
+      run: |
+        docker exec cont ls -la /app/bin
+    
+    - name: Copy Tetris.jar from container
+      run: |
+        docker cp cont:/app/bin/Tetris.jar ./Tetris.jar
+    - name: Stop and remove Docker container
+      run: |
+        docker stop cont || true
+        docker rm cont || true
+    - name: Upload artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: Tetris.jar
+        path: ./Tetris.jar
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+    if: startsWith(github.ref, 'refs/tags/') && github.ref != 'refs/heads/main'  # S'assurer que c'est un tag et pas la branche main
+
+    steps:
+    - name: Log in to Docker Hub
+      run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+
+    - name: Tag and push image to Docker Hub
+      run: |
+        echo "Tagging and pushing image to Docker Hub..."
+        docker tag tetrisant sciencefear/tetrisant:${{ github.ref_name }}
+        docker push sciencefear/tetrisant:${{ github.ref_name }}
