@@ -1,6 +1,5 @@
 stages:
   - build
-  - deploy
 
 build:
   stage: build
@@ -18,6 +17,3 @@ build:
   tags:
     - dosi
 
-deploy:
-  stage : deploy
-  script :
